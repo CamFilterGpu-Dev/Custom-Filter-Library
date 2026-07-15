@@ -3,9 +3,9 @@ import numpy as np
 import math
 
 # ==============================================================================
-# 🛠️ Perfunct CamFilter GPU: CUSTOM SCRIPTING GUIDE 🛠️
+# 🛠️ Perfunct CamFilterGPU: CUSTOM SCRIPTING GUIDE 🛠️
 # ==============================================================================
-# This script runs directly inside the compiled Perfunct GPU environment.
+# This script runs directly inside the compiled CamFilterGPU environment.
 # You have native access to the bundled high-performance libraries.
 # -NOTE, there is a lot more than just this. See the other examples for different controls
 #  and tracking and image tools.
