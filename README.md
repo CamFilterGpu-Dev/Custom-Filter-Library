@@ -12,7 +12,7 @@ These initial scripts demonstrate how to hook into the GPU-accelerated virtual c
 
 ## 📦 What's Included
 
-This repository contains 5 baseline example scripts designed to help you understand the filter architecture and get a quick start:
+This repository contains 7 baseline example scripts designed to help you understand the filter architecture and get a quick start:
 * **intro_example_newsprint.py** - *Transforms the video into 'newsprint-like' halftone*
 * **example_01_basic_noise.py** - *Adds moving 'noise' to the video, both black and white or color, with an inverter switch*
 * **example_02_risingtype.py)** - *Enables live typing in the video window. When Enter is pressed, the letters 'float' upwards*
