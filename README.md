@@ -25,7 +25,7 @@ This repository contains 5 baseline example scripts designed to help you underst
 
 1. Download the `.py` script you want to use.
 2. Place the script into your designated CamFilterGpu Custom Filters directory.
-3. Launch (or restart) CamFilterGpu. (Get it from [Perfunct.com](https://perfunct.com), 14 day free trial)
+3. Launch CamFilterGpu. (Get it from [Perfunct.com](https://perfunct.com), 14 day free trial)
 4. Select the filter from Node Editor Window (see demo videos), apply it to your live virtual camera feed. That's it!
 
 ## 🛠️ Development & Customization
