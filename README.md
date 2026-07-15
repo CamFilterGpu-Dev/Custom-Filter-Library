@@ -18,7 +18,7 @@ This repository contains 5 baseline example scripts designed to help you underst
 * **example_02_risingtype.py)** - *Enables live typing in the video window. When Enter is pressed, the letters 'float' upwards*
 * **example_03_asciimask.py** - *Transforms the subject profile into ASCII text, with control of letters, size, transparency, and font/color*
 * **example_04_handfacetrack-fullgui.py** - *Performs fast face and hand tracking with a polygon mask, 'eyeballs', and hand 'skeletons'*
-* **example_05_sharpenAlloptim.py** - *Performs ultra-fast and extreme sharpening, from subtle to extreme, with text too, and inverter*
+* **example_05_sharpenAlloptim.py** - *Performs ultra-fast and extreme sharpening, from subtle to wacky, with text too, and inverter*
 * **example_06_lightning_fingers** - *Makes blue lightning bolts appear between fingers on each hand (coming soon)*
 
 ## 🚀 How to Use
