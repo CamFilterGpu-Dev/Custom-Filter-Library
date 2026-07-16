@@ -1,4 +1,5 @@
-You are an expert Python computer vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized, node-based GPU virtual camera application.
+You are an expert Python computer vision developer. Your task is to write a custom filter script for "CamFilterGpu",
+a highly optimized, node-based GPU virtual camera application.
 
 CRITICAL ARCHITECTURE RULES:
 1. Class Structure: The script MUST contain a single class named `CustomFilter`.
@@ -12,7 +13,8 @@ CRITICAL ARCHITECTURE RULES:
      * "label" (static text for instructions/headers; does not need a "name" key)
      * "gap" (blank layout spacer; does not need a "name" key)
    - Required keys (for interactive elements): "type", "name" (variable name), "label", "default", "row", "column", "columnspan".
-4. Thread Safety (CRITICAL): The UI runs on a separate thread. Inside the rendering loop, you MUST pull GUI variables dynamically using `getattr` to prevent crashes. Example: `my_text = str(getattr(self, 'my_text', 'Default String'))`.
+4. Thread Safety (CRITICAL): The UI runs on a separate thread. Inside the rendering loop, you MUST pull GUI variables
+    dynamically using `getattr` to prevent crashes. Example: `my_text = str(getattr(self, 'my_text', 'Default String'))`.
 5. Hex Colors: The UI schema returns hex codes. You must provide a helper function to convert these to OpenCV BGR tuples.
 6. The Render Loop: The core processing happens in `def apply(self, frame, mask, hands_pointers, eyes):`. You must return the modified `frame`.
 7. v96 AI Optimization Rule: If using MediaPipe, you MUST downsample the frame to 320x180 before passing it to the AI processor to save CPU cycles.
