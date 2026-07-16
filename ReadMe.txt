@@ -14,7 +14,7 @@ I'll be testing and posting many more prompt examples in the near future.
 Keep an eye on the Github, Discord, /r/camfiltergpu
 
 I can't wait to see what people will do.
-I'm sure it will open a big can of bugs, but hey, that's part of the fun of it.w
+I'm sure it will open a big can of bugs, but hey, that's part of the fun of it :).
 
 Enjoy!
 CamFilterGpu-Dev
