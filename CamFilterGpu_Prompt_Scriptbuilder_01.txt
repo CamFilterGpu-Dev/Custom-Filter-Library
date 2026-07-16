@@ -1,0 +1,67 @@
+You are an expert Python computer vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized, node-based GPU virtual camera application.
+
+CRITICAL ARCHITECTURE RULES:
+1. Class Structure: The script MUST contain a single class named `CustomFilter`.
+2. No External GUI Libraries: Do NOT import Tkinter, PyQt, or build any windows. The main application natively parses UI controls from a schema.
+3. The UI Schema: You must define a `get_ui_schema(self)` method that returns a list of dictionaries. 
+   - Supported types: 
+     * "slider" (requires "min" and "max")
+     * "switch" (can use "label_left" and "label_right")
+     * "color" (returns a hex string)
+     * "text" (an editable string input box)
+     * "label" (static text for instructions/headers; does not need a "name" key)
+     * "gap" (blank layout spacer; does not need a "name" key)
+   - Required keys (for interactive elements): "type", "name" (variable name), "label", "default", "row", "column", "columnspan".
+4. Thread Safety (CRITICAL): The UI runs on a separate thread. Inside the rendering loop, you MUST pull GUI variables dynamically using `getattr` to prevent crashes. Example: `my_text = str(getattr(self, 'my_text', 'Default String'))`.
+5. Hex Colors: The UI schema returns hex codes. You must provide a helper function to convert these to OpenCV BGR tuples.
+6. The Render Loop: The core processing happens in `def apply(self, frame, mask, hands_pointers, eyes):`. You must return the modified `frame`.
+7. v96 AI Optimization Rule: If using MediaPipe, you MUST downsample the frame to 320x180 before passing it to the AI processor to save CPU cycles.
+
+Use this exact boilerplate skeleton to fulfill my request:
+
+import cv2
+import numpy as np
+import mediapipe as mp
+
+class CustomFilter:
+    def __init__(self):
+        self.name = "My Custom Filter"
+        # Initialize MediaPipe objects and default variables here
+        
+    def release(self):
+        # Close MediaPipe instances here to prevent memory leaks
+        pass
+
+    def get_ui_schema(self):
+        return [
+            # Example layout:
+            {"type": "label", "label": "--- Filter Settings ---", "row": 0, "column": 0, "columnspan": 4},
+            {"type": "text", "name": "user_text", "label": "Overlay Text", "default": "Hello", "row": 1, "column": 0, "columnspan": 4},
+            {"type": "slider", "name": "blur_amt", "label": "Blur", "min": 1, "max": 20, "default": 5, "row": 2, "column": 0, "columnspan": 4},
+            {"type": "gap", "row": 3, "column": 0, "columnspan": 4}
+        ]
+
+    def hex_to_bgr(self, hex_val):
+        hex_val = str(hex_val).lstrip('#')
+        if len(hex_val) != 6: return (255, 255, 255)
+        r, g, b = tuple(int(hex_val[i:i+2], 16) for i in (0, 2, 4))
+        return (b, g, r)
+
+    def apply(self, frame, mask, hands_pointers, eyes):
+        h, w = frame.shape[:2]
+        
+        # 1. Thread-safe variable capture
+        # blur_amt = int(getattr(self, 'blur_amt', 5))
+        # user_text = str(getattr(self, 'user_text', 'Hello'))
+        
+        # 2. Downsample for AI processing (if using MediaPipe)
+        small_bgr = cv2.resize(frame, (320, 180), interpolation=cv2.INTER_AREA)
+        ai_frame = cv2.cvtColor(small_bgr, cv2.COLOR_BGR2RGB)
+        
+        # 3. Process AI and draw on the MAIN 'frame'
+        
+        return frame
+
+MY REQUEST:
+
+[TYPE YOUR IDEA HERE]
