@@ -7,6 +7,7 @@ CamFilterGpu is designed to work seamlessly and zero-lag with OBS (via Spout2), 
 
 * 🎬 **Video Demos & Tutorials:** [youtube.com/@camfiltergpu](https://youtube.com/@camfiltergpu)
 * 🚀 **Download the App:** Visit [Perfunct.com](https://perfunct.com) *(Note: The main application is proprietary, not open source, but is very inexpensive, like cup-of-coffee inexpensive, 14 day free trial)*
+* **Join our Discord for announcments and CamFilterGpu related:** [https://discord.com/invite/48YjBFUqzr](https://discord.com/invite/48YjBFUqzr)
 
 These initial scripts demonstrate how to hook into the GPU-accelerated virtual camera pipeline, allowing you to manipulate live video feeds using standard Python and OpenCV operations. Many other powerful libraries are already built-in, such as `numpy`, `onnxruntime`, and more.
 
