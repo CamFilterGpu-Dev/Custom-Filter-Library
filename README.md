@@ -2,7 +2,7 @@
 
 Official Python script examples and templates for creating custom video effects and filters in **CamFilterGpu**. 
 
-CamFilterGpu is a fast live video *super-enhancer* with foreground-background separation and independent color grading, a unique effects generator, and built-in GPU acceleration with AI segmentation/tracking. CamFilterGpu was designed from scratch to allow you to rapidly build video pipelines and inject your own filtering scripts 'on-the-fly'. There is a built-in Node Pipeline Editor (see the video demos) where you can select a Python script and load it for instant viewing and tweaking of your custom special effects!
+CamFilterGpu is a fast live video *super-enhancer* with foreground-background separation and independent color grading, a unique effects generator, and built-in GPU acceleration with AI segmentation/tracking. CamFilterGpu was designed from scratch (not vibe coded) to allow you to rapidly build video pipelines and inject your own filtering scripts 'on-the-fly'. There is a built-in Node Pipeline Editor (see the video demos) where you can select a Python script and load it for instant viewing and tweaking of your custom special effects!
 CamFilterGpu is designed to work seamlessly and zero-lag with OBS (via Spout2), Zoom, Discord, and other related systems.
 
 * 🎬 **Video Demos & Tutorials:** [youtube.com/@camfiltergpu](https://youtube.com/@camfiltergpu)
