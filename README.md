@@ -1,6 +1,6 @@
 # CamFilterGpu - Example Filter Library
 
-UPDATE: 7/27, Download and install (or reinstall) the new Major updtate to the CamfilterGpu app. Now with new mini-gui controls and
+UPDATE: 7/27, Download and install (or reinstall) the new Major update of the CamfilterGpu app. Now with new mini-gui controls and
 "Master Mix" slider that gives you fine control of your overall filter vs. raw camera blend.
 Go to [Perfunct.com](https://perfunct.com) for download and details.
 
