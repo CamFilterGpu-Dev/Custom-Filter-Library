@@ -1,8 +1,10 @@
 # CamFilterGpu - Example Filter Library
 
-UPDATE: 8/11, Download and install (or reinstall) the new Major update of the CamfilterGpu app. Now with new mini-gui controls and
+UPDATE: 10/26, Download and install (or reinstall) the new Major 1.23 update of the CamfilterGpu app.
+NOW with AMD, ARGB background-removal with fine mouse and keyboard control.
+1080p cam input/output. New controls for optimizing subject/background segmentation speed.
 "Master Mix" slider that gives you fine control of your overall filter vs. raw camera blend.
-Go to [Perfunct.com](https://perfunct.com) for download and details.
+Go to [Camfiltergpu.com](https://camfiltergpu.com) for downloads and details.
 
 Official Python script examples and templates for creating custom video effects and filters in **CamFilterGpu**. 
 
