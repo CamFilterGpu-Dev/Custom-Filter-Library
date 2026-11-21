@@ -1,6 +1,6 @@
 # CamFilterGpu - Example Filter Library
 
-UPDATE: 10/26, Download and install (or reinstall) the new Major 1.23 update of the CamfilterGpu app.
+UPDATE: 11/26, Download and install (or reinstall) the new Major 1.27 update of the CamfilterGpu app.
 NOW with AMD, ARGB background-removal with fine mouse and keyboard control.
 1080p cam input/output. New controls for optimizing subject/background segmentation speed.
 "Master Mix" slider that gives you fine control of your overall filter vs. raw camera blend.
@@ -11,7 +11,8 @@ Official Python script examples and templates for creating custom video effects 
 CamFilterGpu is a fast live video *super-tool* with fast GPU (onnx) foreground-background separation/removal and independent color grading, a unique effects generator, and built-in GPU acceleration with AI segmentation/tracking. CamFilterGpu was designed from scratch (not vibe coded) to allow you to rapidly build video pipelines and inject your own filtering scripts 'on-the-fly'. There is a built-in Node Pipeline Editor (see the video demos) where you can select a Python script and load it for instant viewing and tweaking of your custom special effects!
 CamFilterGpu is designed to work seamlessly and zero-lag with OBS (via Spout2), Zoom, Discord, and other related systems.
 
-* 🎬 **Video Demos & Tutorials:** [youtube.com/@camfiltergpu](https://youtube.com/@camfiltergpu)
+* 🎬 **New custom effects creation demo-tutorial** [youtube.com](https://youtu.be/earKQWvR7KY))
+* 🎬 **More Video Demos & Tutorials:** [youtube.com/@camfiltergpu](https://youtube.com/@camfiltergpu)
 * 🚀 **Download the App:** Visit [camfiltergpu.com](https://camfiltergpu.com) *(Note: The main application is proprietary not open source, but is very inexpensive, like cup-of-coffee inexpensive, 14 day free trial)*
 * **Join our Discord for announcments and CamFilterGpu related:** [https://discord.com/invite/48YjBFUqzr](https://discord.com/invite/48YjBFUqzr)
 
