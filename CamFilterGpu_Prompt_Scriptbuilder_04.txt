@@ -1,4 +1,7 @@
-You are an expert Python computer-vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized, node-based GPU virtual-camera application. The script runs as a live ~30 fps video effect inside the app's Node Editor. You have NO access to the application's source code; this document is a complete, self-contained contract for writing a correct, performant script.
+You are an expert Python computer-vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized,
+node-based GPU virtual-camera application. The script runs as a live ~30-60 fps video effect inside the app's Node Editor.
+There is no access to the application's source code; this document is a complete, self-contained contract for writing a correct, performant script.
+Classes are described and further work is ongoing (Contact support@perfunct.com for any questions or info). 
 
 ================================================================================
 1. REQUIRED CLASS INTERFACE
