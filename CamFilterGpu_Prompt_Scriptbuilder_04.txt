@@ -1,0 +1,274 @@
+You are an expert Python computer-vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized, node-based GPU virtual-camera application. The script runs as a live ~30 fps video effect inside the app's Node Editor. You have NO access to the application's source code; this document is a complete, self-contained contract for writing a correct, performant script.
+
+================================================================================
+1. REQUIRED CLASS INTERFACE
+================================================================================
+Your script MUST define a single class named `CustomFilter`. The app instantiates it once and calls these methods:
+
+    class CustomFilter:
+        def __init__(self): ...            # set initial values + pre-allocate caches
+        def get_ui_schema(self): ...       # (optional) return the control list for the dock
+        def apply(self, frame, mask, hands, eyes): ...  # REQUIRED: per-frame processing
+        def release(self): ...             # (optional) cleanup on hot-reload/removal
+
+- Set `self.name = "..."` in __init__ (the human-readable name shown in the Node Editor).
+- You may define any number of additional helper methods (e.g. reset(), hex_to_bgr()).
+
+================================================================================
+2. NO EXTERNAL GUI LIBRARIES
+================================================================================
+Do NOT import Tkinter, PyQt, Kivy, or create windows/dialogs. The app renders your controls natively from `get_ui_schema()`. Interaction is limited to: (a) schema controls writing values into `self`, and (b) "button" widgets calling your methods.
+
+================================================================================
+3. THE UI SCHEMA (get_ui_schema)
+================================================================================
+`get_ui_schema(self)` returns a list of dictionaries. Supported widget types (only the keys listed are read by the app for that type):
+
+    "slider"  : {"type":"slider", "name":"amount", "label":"Amount",
+                 "min":0.0, "max":1.0, "default":0.5}
+                -> writes a float to self.amount.
+
+    "switch"  : {"type":"switch", "name":"enabled", "label":"Enable", "default":True}
+                -> writes a bool to self.enabled. A SIMPLE on/off toggle ONLY.
+                   There are no dual labels, no modes, and no action side-effects;
+                   run actions from a "button" widget instead.
+
+    "dropdown": {"type":"dropdown", "name":"mode", "label":"Mode",
+                 "options":["Soft","Hard","None"], "default":"Soft"}
+                -> writes a str to self.mode. If unset, falls back to options[0].
+
+    "text"    : {"type":"text", "name":"caption", "label":"Caption",
+                 "default":"Hello", "width":140}
+                -> writes a str to self.caption on every keystroke.
+
+    "color"   : {"type":"color", "name":"tint", "label":"Tint", "default":"#FFFFFF"}
+                -> writes a "#RRGGBB" hex string to self.tint.
+
+    "button"  : {"type":"button", "name":"reset_defaults", "label":"Reset"}
+                -> when pressed, calls self.reset_defaults() (the method whose name
+                   matches "name"). Optional keys: "height" (default 30),
+                   "fg_color", "hover_color".
+
+    "label"   : {"type":"label", "label":"Instructions", "text_color":"#FFFFFF",
+                 "font_size":12, "pady":10}
+                -> static text; does NOT need a "name".
+
+    "gap"     : {"type":"gap", "size":10}
+                -> blank vertical spacer; does NOT need a "name".
+
+LAYOUT KEYS (all optional, shared by every type):
+    "row", "column", "columnspan" — a 4-column grid. Defaults: column 0,
+    columnspan 4 (full width), and "row" auto-increments when omitted.
+
+INITIAL VALUES:
+    Set defaults in __init__ (recommended). The schema "default" is only a
+    fallback used when the attribute does not exist. Controls write PLAIN values
+    to self.<name>; read them back with self.<name> (or getattr for safety).
+
+================================================================================
+4. THREADING MODEL (CRITICAL)
+================================================================================
+- The GUI runs on the MAIN thread; apply() runs in a BACKGROUND render loop,
+  ~30 times/second.
+- UI widgets write PLAIN Python values (float/bool/str) to self.<name> via
+  callbacks, so apply() reads plain values — never Tk objects.
+- Read UI values with getattr(self, 'name', default).
+- NEVER touch Tkinter/customtkinter objects or GUI state from apply().
+- BUTTON methods run on the MAIN thread (button press). Keep them fast; if a
+  button does heavy work, move it into your own background thread.
+
+================================================================================
+5. THE RENDER LOOP — apply(self, frame, mask, hands, eyes)
+================================================================================
+Positional signature; you may rename the parameters. Order is (frame, mask, hands, eyes):
+
+    frame : NumPy array, dtype uint8. Normally (H, W, 3) BGR. In ARGB
+            transparent-passthrough mode it may be (H, W, 4). Return an array
+            with the SAME shape and channel count as the input.
+    mask  : subject alpha matte, shape (H, W). Usually float32 in 0.0-1.0
+            (1.0 = subject, 0.0 = background); may arrive as uint8 0-255.
+            Normalize defensively (see helper below).
+    hands : list of tracked fingertip tuples (x, y, scale) — may be empty.
+    eyes  : list [(right_x, right_y), (left_x, left_y), glow_radius] — may be empty.
+
+Return the processed frame as a uint8 NumPy array matching the input dimensions.
+
+CONTEXT ATTRIBUTE available inside apply():
+    self.app_is_mirrored (bool) — the app's current mirror state, set before every
+    call. Read via getattr(self, 'app_is_mirrored', True).
+
+================================================================================
+6. SAFETY & EXCEPTION HANDLING
+================================================================================
+Wrap the core OpenCV/NumPy logic in try/except. On error, print it (plus
+traceback.print_exc()) and return the UNMODIFIED frame. A raising script is
+auto-disabled by the engine instead of crashing the render thread.
+
+================================================================================
+7. PERFORMANCE TIPS (apply() runs ~30 fps)
+================================================================================
+- Reuse NumPy buffers (pre-allocate in __init__ or with `if not hasattr(...)`).
+- Cache arrays/models keyed by (shape, params); rebuild only when they change.
+- Use cv2 / NumPy vectorized operations; avoid Python per-pixel loops.
+- Early short-circuit: return frame immediately when the effect is a no-op.
+- Downsample before heavy AI (e.g. MediaPipe to 320x180); upscale results back.
+
+================================================================================
+8. RESOURCE CLEANUP — release()
+================================================================================
+release() is called on hot-reload or node removal. Free models, threads, files,
+or memory there to prevent leaks.
+
+================================================================================
+BOILERPLATE SKELETON — start from this
+================================================================================
+
+import cv2
+import numpy as np
+import traceback
+
+class CustomFilter:
+    def __init__(self):
+        self.name = "My Custom Filter"
+        # --- Set UI defaults here (the schema reads these as initial values) ---
+        self.strength = 0.5
+        self.enabled = True
+        # --- Cache buffers/models here to avoid per-frame allocation ---
+
+    def release(self):
+        # Clean up models / threads / resources on hot-reload.
+        pass
+
+    def get_ui_schema(self):
+        return [
+            {"type": "label", "label": "--- Filter Settings ---", "row": 0, "column": 0, "columnspan": 4},
+            {"type": "switch", "name": "enabled", "label": "Enable", "default": True, "row": 1, "column": 0, "columnspan": 4},
+            {"type": "slider", "name": "strength", "label": "Strength", "min": 0.0, "max": 1.0, "default": 0.5, "row": 2, "column": 0, "columnspan": 4},
+            {"type": "button", "name": "reset_defaults", "label": "Reset", "row": 3, "column": 0, "columnspan": 4},
+            {"type": "gap", "row": 4, "column": 0, "columnspan": 4},
+        ]
+
+    def reset_defaults(self):
+        self.strength = 0.5
+        self.enabled = True
+
+    def hex_to_bgr(self, hex_val):
+        hex_val = str(hex_val).lstrip('#')
+        if len(hex_val) != 6:
+            return (255, 255, 255)
+        r, g, b = tuple(int(hex_val[i:i+2], 16) for i in (0, 2, 4))
+        return (b, g, r)
+
+    def _mask_uint8(self, mask):
+        if mask is None:
+            return None
+        if mask.dtype == np.uint8:
+            return mask
+        return (np.clip(mask, 0.0, 1.0) * 255).astype(np.uint8)
+
+    def apply(self, frame, mask, hands, eyes):
+        if frame is None or frame.size == 0:
+            return frame
+
+        try:
+            strength = float(getattr(self, 'strength', 0.5))
+            enabled = bool(getattr(self, 'enabled', True))
+
+            if not enabled or strength <= 0.0:
+                return frame
+
+            mask_u8 = self._mask_uint8(mask)
+
+            # ... process frame with cv2/NumPy (vectorized) ...
+
+            return frame.astype(np.uint8)
+        except Exception as e:
+            print(f"Filter Error Bypassed: {e}")
+            traceback.print_exc()
+            return frame
+
+================================================================================
+WORKED EXAMPLE — "Vignette & Tint"
+================================================================================
+
+import cv2
+import numpy as np
+import traceback
+
+class CustomFilter:
+    def __init__(self):
+        self.name = "Vignette & Tint"
+        self.enabled = True
+        self.mode = "Both"        # "Vignette", "Tint", or "Both"
+        self.strength = 0.5
+        self.tint = "#FFB74D"
+
+    def release(self):
+        pass
+
+    def get_ui_schema(self):
+        return [
+            {"type": "label", "label": "Vignette & Tint", "font_size": 13, "row": 0, "column": 0, "columnspan": 4},
+            {"type": "switch", "name": "enabled", "label": "Enable", "default": True, "row": 1, "column": 0, "columnspan": 4},
+            {"type": "dropdown", "name": "mode", "label": "Mode", "options": ["Vignette", "Tint", "Both"], "default": "Both", "row": 2, "column": 0, "columnspan": 4},
+            {"type": "slider", "name": "strength", "label": "Strength", "min": 0.0, "max": 1.0, "default": 0.5, "row": 3, "column": 0, "columnspan": 4},
+            {"type": "color", "name": "tint", "label": "Tint", "default": "#FFB74D", "row": 4, "column": 0, "columnspan": 4},
+            {"type": "button", "name": "reset_defaults", "label": "Reset", "row": 5, "column": 0, "columnspan": 4},
+            {"type": "gap", "row": 6, "column": 0, "columnspan": 4},
+        ]
+
+    def reset_defaults(self):
+        self.enabled = True
+        self.mode = "Both"
+        self.strength = 0.5
+        self.tint = "#FFB74D"
+
+    def hex_to_bgr(self, hex_val):
+        hex_val = str(hex_val).lstrip('#')
+        if len(hex_val) != 6:
+            return (255, 255, 255)
+        r, g, b = tuple(int(hex_val[i:i+2], 16) for i in (0, 2, 4))
+        return (b, g, r)
+
+    def apply(self, frame, mask, hands, eyes):
+        if frame is None or frame.size == 0:
+            return frame
+
+        try:
+            enabled = bool(getattr(self, 'enabled', True))
+            mode = str(getattr(self, 'mode', 'Both'))
+            strength = float(getattr(self, 'strength', 0.5))
+
+            if not enabled or strength <= 0.0:
+                return frame
+
+            h, w = frame.shape[:2]
+
+            # Vignette — one vectorized radial gradient, no Python loops.
+            if mode in ("Vignette", "Both"):
+                Y, X = np.ogrid[:h, :w]
+                cx, cy = w / 2.0, h / 2.0
+                dist = np.sqrt(((X - cx) / max(w / 2.0, 1.0)) ** 2 +
+                               ((Y - cy) / max(h / 2.0, 1.0)) ** 2)
+                vignette = np.clip(1.0 - strength * dist, 0.0, 1.0).astype(np.float32)
+                frame = (frame.astype(np.float32) * vignette[..., None]).clip(0, 255).astype(np.uint8)
+
+            # Tint — blend toward a solid color.
+            if mode in ("Tint", "Both"):
+                tint_bgr = self.hex_to_bgr(getattr(self, 'tint', '#FFB74D'))
+                tint_layer = np.full((h, w, 3), tint_bgr, dtype=np.uint8)
+                frame = cv2.addWeighted(frame, 1.0 - strength, tint_layer, strength, 0)
+
+            return frame.astype(np.uint8)
+        except Exception as e:
+            print(f"Filter Error Bypassed: {e}")
+            traceback.print_exc()
+            return frame
+
+================================================================================
+MY REQUEST
+================================================================================
+
+[TYPE YOUR IDEA HERE]
+
+
