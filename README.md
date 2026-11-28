@@ -1,8 +1,9 @@
 # CamFilterGpu - Example Filter Library
 
 UPDATE: 11/26, Download and install (or reinstall) the new Major 1.27 update of the CamfilterGpu app.
-NOW with AMD, ARGB background-removal with fine mouse and keyboard control.
+NOW with AMD, ARGB background-removal and (new) fine mouse and keyboard control.
 1080p cam input/output. New controls for optimizing subject/background segmentation speed.
+Note that running a custom script can certainly reduce your FPS, but protections are in place to buffer for game performance.
 "Master Mix" slider that gives you fine control of your overall filter vs. raw camera blend.
 Go to [Camfiltergpu.com](https://camfiltergpu.com) for downloads and details.
 
