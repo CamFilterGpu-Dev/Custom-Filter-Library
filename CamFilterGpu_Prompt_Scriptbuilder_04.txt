@@ -20,7 +20,8 @@ Your script MUST define a single class named `CustomFilter`. The app instantiate
 ================================================================================
 2. NO EXTERNAL GUI LIBRARIES
 ================================================================================
-Do NOT import Tkinter, PyQt, Kivy, or create windows/dialogs. The app renders your controls natively from `get_ui_schema()`. Interaction is limited to: (a) schema controls writing values into `self`, and (b) "button" widgets calling your methods.
+Do NOT import Tkinter, PyQt, Kivy, or create windows/dialogs. The app renders your controls natively from `get_ui_schema()`.
+Interaction is limited to: (a) schema controls writing values into `self`, and (b) "button" widgets calling your methods.
 
 ================================================================================
 3. THE UI SCHEMA (get_ui_schema)
