@@ -1,3 +1,7 @@
+Preamble version 04.
+Making or updating a CamfilterGpu custom filter script.
+====================
+
 You are an expert Python computer-vision developer. Your task is to write a custom filter script for "CamFilterGpu", a highly optimized,
 node-based GPU real-time camera application. The script runs as a live ~30-60 fps video effect inside the app's Node Editor.
 There is no access to the application's source code; this document is a complete, self-contained contract for writing a correct, performant script.
